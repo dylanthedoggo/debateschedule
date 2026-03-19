@@ -1,13 +1,1022 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React + TS</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Debate Team Scheduler</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #090b0f;
+    --surface: #0f1117;
+    --card: #141820;
+    --border: #1d2335;
+    --border-light: #252d42;
+    --amber: #c98a2e;
+    --amber-bright: #e8a83e;
+    --amber-dim: #7a521a;
+    --amber-glow: rgba(201,138,46,0.12);
+    --blue: #3a6fa0;
+    --blue-bright: #5090c8;
+    --blue-dim: #1e3d5a;
+    --green: #2d7a4f;
+    --green-bright: #42b86f;
+    --red: #8a2020;
+    --red-bright: #c43c3c;
+    --text: #d8dce8;
+    --text-dim: #5a6278;
+    --text-muted: #3a4155;
+    --congress: #c98a2e;
+    --ld: #3a6fa0;
+    --cx: #2d7a4f;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Instrument Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Subtle noise overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    opacity: 0.4;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrap { position: relative; z-index: 1; }
+
+  /* HEADER */
+  header {
+    padding: 32px 40px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-end;
+    gap: 20px;
+    background: linear-gradient(180deg, rgba(201,138,46,0.04) 0%, transparent 100%);
+  }
+
+  .header-left { flex: 1; }
+
+  .header-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--amber);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    opacity: 0.8;
+  }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+
+  h1 span { color: var(--amber); }
+
+  .header-sub {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-top: 6px;
+  }
+
+  /* SECTIONS LAYOUT */
+  .sections {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section {
+    padding: 28px 28px 32px;
+    border-right: 1px solid var(--border);
+    position: relative;
+  }
+
+  .section:last-child { border-right: none; }
+
+  .section-header {
+    margin-bottom: 20px;
+  }
+
+  .section-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 2px;
+    margin-bottom: 10px;
+  }
+
+  .section-badge.congress { background: rgba(201,138,46,0.12); color: var(--congress); border: 1px solid rgba(201,138,46,0.25); }
+  .section-badge.ld { background: rgba(58,111,160,0.12); color: var(--blue-bright); border: 1px solid rgba(58,111,160,0.25); }
+  .section-badge.cx { background: rgba(45,122,79,0.12); color: var(--green-bright); border: 1px solid rgba(45,122,79,0.25); }
+
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.01em;
+  }
+
+  .section-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+
+  /* STUDENT CARDS */
+  .students-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 16px;
+    min-height: 60px;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 24px 16px;
+    border: 1px dashed var(--border-light);
+    border-radius: 4px;
+    color: var(--text-muted);
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .student-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px;
+    position: relative;
+    transition: border-color 0.15s;
+  }
+
+  .student-card:hover { border-color: var(--border-light); }
+
+  .card-top {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .student-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--border-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-dim);
+    flex-shrink: 0;
+  }
+
+  .student-name-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 2px 0;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .student-name-input::placeholder { color: var(--text-muted); }
+  .student-name-input:focus { border-color: var(--text-dim); }
+
+  .remove-btn {
+    width: 22px;
+    height: 22px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-muted);
+    border-radius: 3px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+
+  .remove-btn:hover { background: rgba(196,60,60,0.12); border-color: rgba(196,60,60,0.4); color: var(--red-bright); }
+
+  /* AVAILABILITY GRID */
+  .avail-grid-wrap {
+    overflow-x: auto;
+    padding-bottom: 2px;
+  }
+
+  .avail-grid {
+    display: grid;
+    grid-template-columns: 52px repeat(7, 1fr);
+    gap: 2px;
+    min-width: 320px;
+  }
+
+  .grid-header {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 0.05em;
+    color: var(--text-dim);
+    text-align: center;
+    padding: 2px 0;
+    text-transform: uppercase;
+  }
+
+  .grid-row-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 7.5px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    padding-right: 4px;
+    line-height: 1.2;
+    text-align: right;
+    justify-content: flex-end;
+  }
+
+  .grid-cell {
+    height: 18px;
+    border-radius: 2px;
+    cursor: pointer;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid transparent;
+    transition: all 0.1s;
+    position: relative;
+  }
+
+  .grid-cell:hover {
+    background: rgba(255,255,255,0.08);
+    border-color: var(--border-light);
+  }
+
+  .grid-cell.busy {
+    background: rgba(196,60,60,0.35);
+    border-color: rgba(196,60,60,0.5);
+  }
+
+  .grid-cell.busy:hover {
+    background: rgba(196,60,60,0.5);
+  }
+
+  .grid-legend {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+    align-items: center;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 9px;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text-muted);
+  }
+
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+  }
+
+  .legend-dot.free { background: rgba(255,255,255,0.06); border: 1px solid var(--border); }
+  .legend-dot.busy { background: rgba(196,60,60,0.35); border: 1px solid rgba(196,60,60,0.5); }
+
+  /* ADD BUTTON */
+  .add-btn {
+    width: 100%;
+    padding: 9px;
+    background: transparent;
+    border: 1px dashed var(--border-light);
+    color: var(--text-dim);
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+
+  .add-btn:hover {
+    border-color: var(--text-dim);
+    color: var(--text);
+    background: rgba(255,255,255,0.02);
+  }
+
+  /* RESULTS */
+  .analyze-btn {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid;
+    border-radius: 4px;
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-bottom: 14px;
+  }
+
+  .analyze-btn.congress {
+    background: rgba(201,138,46,0.08);
+    border-color: rgba(201,138,46,0.3);
+    color: var(--amber);
+  }
+
+  .analyze-btn.congress:hover {
+    background: rgba(201,138,46,0.15);
+    border-color: var(--amber);
+  }
+
+  .analyze-btn.ld {
+    background: rgba(58,111,160,0.08);
+    border-color: rgba(58,111,160,0.3);
+    color: var(--blue-bright);
+  }
+
+  .analyze-btn.ld:hover {
+    background: rgba(58,111,160,0.18);
+    border-color: var(--blue-bright);
+  }
+
+  .analyze-btn.cx {
+    background: rgba(45,122,79,0.08);
+    border-color: rgba(45,122,79,0.3);
+    color: var(--green-bright);
+  }
+
+  .analyze-btn.cx:hover {
+    background: rgba(45,122,79,0.18);
+    border-color: var(--green-bright);
+  }
+
+  .results-panel {
+    display: none;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px;
+  }
+
+  .results-panel.visible { display: block; }
+
+  .results-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+  }
+
+  .result-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .result-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .result-row:first-of-type { padding-top: 0; }
+
+  .result-rank {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--text-muted);
+    width: 16px;
+    flex-shrink: 0;
+  }
+
+  .result-rank.top { color: var(--amber); font-weight: 600; }
+
+  .result-day {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    width: 32px;
+    flex-shrink: 0;
+  }
+
+  .result-bar-wrap {
+    flex: 1;
+    height: 6px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .result-bar {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.4s ease;
+  }
+
+  .result-bar.congress { background: var(--amber); }
+  .result-bar.ld { background: var(--blue-bright); }
+  .result-bar.cx { background: var(--green-bright); }
+
+  .result-pct {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    width: 32px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .result-time {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--text-muted);
+    width: 60px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .result-optimal {
+    background: rgba(201,138,46,0.06);
+    border: 1px solid rgba(201,138,46,0.2);
+    border-radius: 4px;
+    padding: 10px 12px;
+    margin-bottom: 10px;
+  }
+
+  .optimal-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--amber-dim);
+    margin-bottom: 4px;
+  }
+
+  .optimal-day {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--amber-bright);
+  }
+
+  .optimal-time {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--amber-dim);
+    margin-top: 2px;
+  }
+
+  .no-students-msg {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    text-align: center;
+    padding: 8px 0;
+  }
+
+  /* CX NOTE */
+  .cx-note {
+    background: rgba(45,122,79,0.06);
+    border: 1px solid rgba(45,122,79,0.15);
+    border-radius: 4px;
+    padding: 8px 10px;
+    margin-top: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--green-bright);
+    line-height: 1.5;
+    opacity: 0.8;
+  }
+
+  /* BOTTOM ACTION BUTTONS */
+  .bottom-actions {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    display: flex;
+    gap: 10px;
+    z-index: 100;
+  }
+
+  .import-btn {
+    padding: 12px 20px;
+    background: var(--card);
+    color: var(--text);
+    border: 1px solid var(--border-light);
+    border-radius: 4px;
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.15s;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  }
+
+  .import-btn:hover {
+    background: var(--border-light);
+    border-color: var(--text-dim);
+    transform: translateY(-1px);
+  }
+
+  .import-btn svg { width: 14px; height: 14px; }
+
+  .download-btn {
+    padding: 12px 22px;
+    background: var(--amber);
+    color: #0a0800;
+    border: none;
+    border-radius: 4px;
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 24px rgba(201,138,46,0.3), 0 0 0 1px rgba(201,138,46,0.5);
+    transition: all 0.15s;
+  }
+
+  .download-btn:hover {
+    background: var(--amber-bright);
+    box-shadow: 0 6px 32px rgba(201,138,46,0.45), 0 0 0 1px var(--amber-bright);
+    transform: translateY(-1px);
+  }
+
+  .download-btn svg { width: 14px; height: 14px; }
+
+  /* FOOTER SPACER */
+  .spacer { height: 80px; }
+
+  /* ANIMATIONS */
+  .student-card {
+    animation: cardIn 0.2s ease forwards;
+  }
+
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 2px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="header-left">
+    <div class="header-tag">Crosby High School &mdash; Debate Team</div>
+    <h1>Meeting <span>Scheduler</span></h1>
+    <div class="header-sub">Mark each student's conflicts, then analyze to find the optimal practice day.</div>
+  </div>
+</header>
+
+<div class="sections">
+
+  <!-- CONGRESS -->
+  <div class="section" id="section-congress">
+    <div class="section-header">
+      <div class="section-badge congress">&#9632; Congress</div>
+      <div class="section-title">Student Congress</div>
+      <div class="section-meta">1x / week &nbsp;&bull;&nbsp; Full group practice</div>
+    </div>
+    <div class="students-grid" id="students-congress">
+      <div class="empty-state">No students added yet.</div>
+    </div>
+    <button class="add-btn" onclick="addStudent('congress')">
+      <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><line x1="5.5" y1="1" x2="5.5" y2="10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="5.5" x2="10" y2="5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Add Student
+    </button>
+    <button class="analyze-btn congress" onclick="analyze('congress')">Analyze Congress</button>
+    <div class="results-panel" id="results-congress"></div>
+  </div>
+
+  <!-- LD -->
+  <div class="section" id="section-ld">
+    <div class="section-header">
+      <div class="section-badge ld">&#9632; LD</div>
+      <div class="section-title">Lincoln-Douglas</div>
+      <div class="section-meta">1x / week &nbsp;&bull;&nbsp; Individual prep + rounds</div>
+    </div>
+    <div class="students-grid" id="students-ld">
+      <div class="empty-state">No students added yet.</div>
+    </div>
+    <button class="add-btn" onclick="addStudent('ld')">
+      <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><line x1="5.5" y1="1" x2="5.5" y2="10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="5.5" x2="10" y2="5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Add Student
+    </button>
+    <button class="analyze-btn ld" onclick="analyze('ld')">Analyze LD</button>
+    <div class="results-panel" id="results-ld"></div>
+  </div>
+
+  <!-- CX -->
+  <div class="section" id="section-cx">
+    <div class="section-header">
+      <div class="section-badge cx">&#9632; CX</div>
+      <div class="section-title">Cross-Examination</div>
+      <div class="section-meta">Every other week &nbsp;&bull;&nbsp; Partner self-runs on off weeks</div>
+    </div>
+    <div class="students-grid" id="students-cx">
+      <div class="empty-state">No students added yet.</div>
+    </div>
+    <button class="add-btn" onclick="addStudent('cx')">
+      <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><line x1="5.5" y1="1" x2="5.5" y2="10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="5.5" x2="10" y2="5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Add Student
+    </button>
+    <button class="analyze-btn cx" onclick="analyze('cx')">Analyze CX</button>
+    <div class="results-panel" id="results-cx"></div>
+  </div>
+
+</div>
+
+<div class="spacer"></div>
+
+</div><!-- .wrap -->
+
+<div class="bottom-actions">
+  <button class="import-btn" onclick="importSnapshot()">
+    <svg viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M7 10V2M4 5l3-3 3 3M2 10v2a1 1 0 001 1h8a1 1 0 001-1v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    Import Snapshot
+  </button>
+  <button class="download-btn" onclick="downloadSnapshot()">
+    <svg viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M7 1v8M4 6l3 3 3-3M2 10v2a1 1 0 001 1h8a1 1 0 001-1v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    Export Snapshot
+  </button>
+</div>
+
+<script>
+const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const TIME_BLOCKS = [
+  '7-9 AM',
+  '9-11 AM',
+  '11AM-1PM',
+  '1-3 PM',
+  '3-5 PM',
+  '5-7 PM',
+  '7-9 PM'
+];
+
+// State: { congress: [{id, name, conflicts: bool[7][7]}], ld: [...], cx: [...] }
+const state = { congress: [], ld: [], cx: [] };
+let idCounter = 0;
+
+function genId() { return ++idCounter; }
+
+function initConflicts() {
+  // TIME_BLOCKS: 0=7-9AM, 1=9-11AM, 2=11AM-1PM, 3=1-3PM, 4=3-5PM, 5=5-7PM, 6=7-9PM
+  // DAYS: 0=Mon, 1=Tue, 2=Wed, 3=Thu, 4=Fri, 5=Sat, 6=Sun
+  // School hours Mon-Thu: 7AM-3PM = blocks 0,1,2,3
+  const conflicts = Array.from({length: 7}, () => Array(7).fill(false));
+  for (let tIdx = 0; tIdx <= 3; tIdx++) {      // 7AM to 3PM
+    for (let dIdx = 0; dIdx <= 3; dIdx++) {    // Mon through Thu
+      conflicts[tIdx][dIdx] = true;
+    }
+  }
+  return conflicts;
+}
+
+function getInitials(name) {
+  const parts = name.trim().split(' ');
+  if (!name.trim()) return '?';
+  if (parts.length === 1) return parts[0][0].toUpperCase();
+  return (parts[0][0] + parts[parts.length-1][0]).toUpperCase();
+}
+
+function addStudent(section) {
+  const student = { id: genId(), name: '', conflicts: initConflicts() };
+  state[section].push(student);
+  renderSection(section);
+  // Focus the name input of the new card
+  setTimeout(() => {
+    const input = document.querySelector(`#card-${student.id} .student-name-input`);
+    if (input) input.focus();
+  }, 50);
+}
+
+function removeStudent(section, id) {
+  state[section] = state[section].filter(s => s.id !== id);
+  renderSection(section);
+}
+
+function toggleCell(section, studentId, dayIdx, timeIdx) {
+  const student = state[section].find(s => s.id === studentId);
+  if (!student) return;
+  student.conflicts[timeIdx][dayIdx] = !student.conflicts[timeIdx][dayIdx];
+  // Update cell visually without full re-render
+  const cell = document.querySelector(`#card-${studentId} .cell-d${dayIdx}-t${timeIdx}`);
+  if (cell) cell.classList.toggle('busy', student.conflicts[timeIdx][dayIdx]);
+  // Update avatar initials if name changed
+  updateAvatar(studentId);
+}
+
+function updateName(section, studentId, value) {
+  const student = state[section].find(s => s.id === studentId);
+  if (student) student.name = value;
+  updateAvatar(studentId);
+}
+
+function updateAvatar(studentId) {
+  const card = document.getElementById(`card-${studentId}`);
+  if (!card) return;
+  const input = card.querySelector('.student-name-input');
+  const avatar = card.querySelector('.student-avatar');
+  if (input && avatar) avatar.textContent = getInitials(input.value);
+}
+
+function buildCard(section, student) {
+  const div = document.createElement('div');
+  div.className = 'student-card';
+  div.id = `card-${student.id}`;
+
+  // Card top
+  const cardTop = document.createElement('div');
+  cardTop.className = 'card-top';
+
+  const avatar = document.createElement('div');
+  avatar.className = 'student-avatar';
+  avatar.textContent = getInitials(student.name);
+
+  const nameInput = document.createElement('input');
+  nameInput.type = 'text';
+  nameInput.className = 'student-name-input';
+  nameInput.placeholder = 'Student name...';
+  nameInput.value = student.name;
+  nameInput.addEventListener('input', e => updateName(section, student.id, e.target.value));
+  nameInput.addEventListener('input', () => updateAvatar(student.id));
+
+  const removeBtn = document.createElement('button');
+  removeBtn.className = 'remove-btn';
+  removeBtn.innerHTML = '&times;';
+  removeBtn.title = 'Remove student';
+  removeBtn.onclick = () => removeStudent(section, student.id);
+
+  cardTop.appendChild(avatar);
+  cardTop.appendChild(nameInput);
+  cardTop.appendChild(removeBtn);
+
+  // Grid
+  const gridWrap = document.createElement('div');
+  gridWrap.className = 'avail-grid-wrap';
+
+  const grid = document.createElement('div');
+  grid.className = 'avail-grid';
+
+  // Header row
+  const emptyCorner = document.createElement('div');
+  grid.appendChild(emptyCorner);
+
+  DAYS.forEach(d => {
+    const h = document.createElement('div');
+    h.className = 'grid-header';
+    h.textContent = d;
+    grid.appendChild(h);
+  });
+
+  // Time rows
+  TIME_BLOCKS.forEach((tb, tIdx) => {
+    const label = document.createElement('div');
+    label.className = 'grid-row-label';
+    label.textContent = tb;
+    grid.appendChild(label);
+
+    DAYS.forEach((_, dIdx) => {
+      const cell = document.createElement('div');
+      cell.className = `grid-cell cell-d${dIdx}-t${tIdx}`;
+      if (student.conflicts[tIdx][dIdx]) cell.classList.add('busy');
+      cell.title = `${DAYS[dIdx]} ${tb}`;
+      cell.addEventListener('click', () => toggleCell(section, student.id, dIdx, tIdx));
+      grid.appendChild(cell);
+    });
+  });
+
+  gridWrap.appendChild(grid);
+
+  // Legend
+  const legend = document.createElement('div');
+  legend.className = 'grid-legend';
+  legend.innerHTML = `
+    <div class="legend-item"><div class="legend-dot free"></div>Free</div>
+    <div class="legend-item"><div class="legend-dot busy"></div>Busy/Conflict</div>
+  `;
+
+  div.appendChild(cardTop);
+  div.appendChild(gridWrap);
+  div.appendChild(legend);
+
+  return div;
+}
+
+function renderSection(section) {
+  const container = document.getElementById(`students-${section}`);
+  container.innerHTML = '';
+
+  if (state[section].length === 0) {
+    const empty = document.createElement('div');
+    empty.className = 'empty-state';
+    empty.textContent = 'No students added yet.';
+    container.appendChild(empty);
+    return;
+  }
+
+  state[section].forEach(student => {
+    container.appendChild(buildCard(section, student));
+  });
+}
+
+function analyze(section) {
+  const students = state[section];
+  const panel = document.getElementById(`results-${section}`);
+  panel.classList.add('visible');
+
+  if (students.length === 0) {
+    panel.innerHTML = `<div class="no-students-msg">Add students to generate a recommendation.</div>`;
+    return;
+  }
+
+  // Algorithm: for each day, for each time block, count free students
+  // Score a day by the best time block on that day
+  const dayResults = DAYS.map((day, dIdx) => {
+    const timeScores = TIME_BLOCKS.map((tb, tIdx) => {
+      const freeCount = students.filter(s => !s.conflicts[tIdx][dIdx]).length;
+      return { tb, tIdx, freeCount };
+    });
+
+    // Sort time blocks by free count descending
+    timeScores.sort((a, b) => b.freeCount - a.freeCount);
+
+    const best = timeScores[0];
+    const pct = Math.round((best.freeCount / students.length) * 100);
+
+    return {
+      day,
+      dIdx,
+      bestTime: best.tb,
+      bestTimeIdx: best.tIdx,
+      freeCount: best.freeCount,
+      total: students.length,
+      pct,
+      timeScores
+    };
+  });
+
+  // Sort by percentage desc, then by best time index (prefer after-school)
+  dayResults.sort((a, b) => {
+    if (b.pct !== a.pct) return b.pct - a.pct;
+    // Prefer time blocks 4-5 (3-7pm) as tiebreaker
+    const aPref = Math.abs(a.bestTimeIdx - 4);
+    const bPref = Math.abs(b.bestTimeIdx - 4);
+    return aPref - bPref;
+  });
+
+  // Filter to top 5
+  const top5 = dayResults.slice(0, 5);
+  const optimal = top5[0];
+
+  let html = `<div class="results-title">Analysis Results &mdash; ${students.length} student${students.length !== 1 ? 's' : ''}</div>`;
+
+  // Optimal box
+  html += `
+    <div class="result-optimal">
+      <div class="optimal-label">Recommended Day</div>
+      <div class="optimal-day">${optimal.day}</div>
+      <div class="optimal-time">Best window: ${optimal.bestTime} &nbsp;&bull;&nbsp; ${optimal.freeCount}/${optimal.total} available</div>
+    </div>
+  `;
+
+  // Ranked rows
+  top5.forEach((r, i) => {
+    const rankLabel = i === 0 ? '#1' : `#${i+1}`;
+    const rankClass = i === 0 ? 'top' : '';
+    html += `
+      <div class="result-row">
+        <div class="result-rank ${rankClass}">${rankLabel}</div>
+        <div class="result-day">${r.day}</div>
+        <div class="result-bar-wrap">
+          <div class="result-bar ${section}" style="width:${r.pct}%"></div>
+        </div>
+        <div class="result-pct">${r.pct}%</div>
+        <div class="result-time">${r.bestTime}</div>
+      </div>
+    `;
+  });
+
+  if (section === 'cx') {
+    html += `<div class="cx-note">CX meets every other week. Partners self-coordinate on off weeks. This schedule applies to coached practice weeks only.</div>`;
+  }
+
+  panel.innerHTML = html;
+}
+
+function importSnapshot() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json';
+  input.onchange = e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      try {
+        const payload = JSON.parse(ev.target.result);
+        if (!payload.version || !payload.state) throw new Error('Invalid file');
+        state.congress = payload.state.congress || [];
+        state.ld = payload.state.ld || [];
+        state.cx = payload.state.cx || [];
+        idCounter = payload.idCounter || 0;
+        ['congress', 'ld', 'cx'].forEach(s => {
+          renderSection(s);
+          document.getElementById(`results-${s}`).classList.remove('visible');
+          document.getElementById(`results-${s}`).innerHTML = '';
+        });
+        const btn = document.querySelector('.import-btn');
+        const orig = btn.innerHTML;
+        btn.textContent = 'Loaded!';
+        setTimeout(() => { btn.innerHTML = orig; }, 1500);
+      } catch {
+        alert("Could not load file. Make sure it's a valid scheduler snapshot.");
+      }
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+
+function downloadSnapshot() {
+  const payload = {
+    version: 1,
+    savedAt: new Date().toISOString(),
+    idCounter,
+    state: { congress: state.congress, ld: state.ld, cx: state.cx }
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `debate-scheduler-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  const btn = document.querySelector('.download-btn');
+  const orig = btn.innerHTML;
+  btn.textContent = 'Saved!';
+  setTimeout(() => { btn.innerHTML = orig; }, 1500);
+}
+
+</script>
+</body>
 </html>
