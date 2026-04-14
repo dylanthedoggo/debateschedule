@@ -495,8 +495,8 @@
     /* ====================================================
        HORN SLIDES — color coding
        ==================================================== */
-    .horn-1 { background: radial-gradient(ellipse at 80% 20%, #252206 0%, #16140a 40%, #0a0818 100%); }
-    .horn-2 { background: radial-gradient(ellipse at 20% 80%, #280f0f 0%, #180b0b 40%, #0a0818 100%); }
+    .horn-2 { background: radial-gradient(ellipse at 80% 20%, #252206 0%, #16140a 40%, #0a0818 100%); }
+    .horn-1 { background: radial-gradient(ellipse at 20% 80%, #280f0f 0%, #180b0b 40%, #0a0818 100%); }
     .aquinas-slide { background: radial-gradient(ellipse at 50% 50%, #0d1628 0%, #0a1020 40%, #0a0818 100%); }
     .dct-slide { background: radial-gradient(ellipse at 30% 30%, #1a1428 0%, #110e1e 40%, #0a0818 100%); }
     .dnt-slide { background: radial-gradient(ellipse at 70% 70%, #101a0c 0%, #0d1409 40%, #0a0818 100%); }
@@ -673,14 +673,14 @@
       <div class="arrow-down"></div>
       <div class="dilemma-arrows">
         <div class="dilemma-horn">
-          <div class="horn-label">Horn A</div>
-          <div class="horn-text">God commands X <em style="color:var(--gold);">because</em> it is good</div>
-          <div class="horn-problem">→ Morality is independent of God. God becomes redundant to ethics.</div>
-        </div>
-        <div class="dilemma-horn">
-          <div class="horn-label">Horn B</div>
+          <div class="horn-label">Horn 1</div>
           <div class="horn-text">X is good <em style="color:var(--gold);">because</em> God commands it</div>
           <div class="horn-problem">→ Morality is arbitrary — God could command cruelty and it would be "good."</div>
+        </div>
+        <div class="dilemma-horn">
+          <div class="horn-label">Horn 2</div>
+          <div class="horn-text">God commands X <em style="color:var(--gold);">because</em> it is good</div>
+          <div class="horn-problem">→ Morality is independent of God. God becomes redundant to ethics.</div>
         </div>
       </div>
     </div>
@@ -693,14 +693,54 @@
 </section>
 
 <!-- ======================================================
-     SLIDE 4: HORN A — INDEPENDENT MORALITY
+     SLIDE 4: HORN 1 — DIVINE COMMAND / ARBITRARINESS
      ====================================================== -->
-<section class="slide content-slide horn-1" aria-label="Horn A">
+<section class="slide content-slide horn-1" aria-label="Horn 1">
+  <div class="stars"></div>
+  <div class="orb orb-crimson" style="width:45%;height:45%;bottom:0%;right:0%;opacity:0.6;"></div>
+  <div class="slide-content">
+    <div class="slide-header reveal">
+      <div class="slide-label">Horn 1 — The Arbitrariness Horn</div>
+      <h2 class="slide-title">"It is good <span class="gold">because</span> God commands it"</h2>
+      <div class="gold-rule reveal" style="transition-delay:0.1s;"></div>
+    </div>
+
+    <div class="two-col reveal" style="transition-delay:0.2s;">
+      <div>
+        <p style="font-family:var(--font-body);font-size:var(--body-size);color:var(--cream-dim);line-height:1.6;margin-bottom:clamp(0.4rem,1vh,0.8rem);">
+          If God's commands create moral facts from scratch, then there was no moral reason for God to issue those commands rather than their opposites.
+        </p>
+        <ul class="bullet-list">
+          <li><strong>The Arbitrariness Objection:</strong> If God commanded torture of innocents, would it be obligatory? Horn 1 says yes — and that's monstrous.</li>
+          <li><strong>The Changeable Morality Problem:</strong> If God changed His commands, morality would flip overnight. "Murder is wrong" becomes contingent, not necessary.</li>
+          <li><strong>The Empty Praise Problem:</strong> "God is good" collapses into "God obeys His own rules" — a tautology with zero moral content. You cannot praise a dictator for conforming to laws he invented and could revoke. Worship becomes fear of power, not genuine admiration of goodness.</li>
+          <li><strong>The Regress:</strong> If obedience to God is good, what makes obedience itself good? Either something prior to God's commands does — defeating Horn 1 — or "obedience is good because God commands obedience," which is circular.</li>
+        </ul>
+      </div>
+      <div>
+        <div class="col-card">
+          <div class="col-card-title">Strengths of This Horn</div>
+          <div class="col-card-body">Preserves divine sovereignty fully. God is the uncaused source of all being and value. Upholds the biblical picture of God as the supreme authority.</div>
+        </div>
+        <div class="col-card crimson" style="margin-top:clamp(0.5rem,1.5vh,1rem);">
+          <div class="col-card-title">The Deepest Problem</div>
+          <div class="col-card-body">William of Ockham accepted this horn fully. Most theists find it intolerable — not just because genocide could be holy on God's whim, but because it makes moral praise of God <em>literally impossible</em>. "God is good" would mean nothing more than "God is God."</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-num">04 / 13</div>
+</section>
+
+<!-- ======================================================
+     SLIDE 5: HORN 2 — INDEPENDENT MORALITY
+     ====================================================== -->
+<section class="slide content-slide horn-2" aria-label="Horn 2">
   <div class="stars"></div>
   <div class="orb orb-gold" style="width:45%;height:45%;top:0%;right:0%;opacity:0.5;"></div>
   <div class="slide-content">
     <div class="slide-header reveal">
-      <div class="slide-label">Horn A — The Independence Horn</div>
+      <div class="slide-label">Horn 2 — The Independence Horn</div>
       <h2 class="slide-title">"God commands it <span class="gold">because</span> it is good"</h2>
       <div class="gold-rule reveal" style="transition-delay:0.1s;"></div>
     </div>
@@ -728,45 +768,6 @@
       </div>
     </div>
   </div>
-  <div class="slide-num">04 / 13</div>
-</section>
-
-<!-- ======================================================
-     SLIDE 5: HORN B — DIVINE COMMAND / ARBITRARINESS
-     ====================================================== -->
-<section class="slide content-slide horn-2" aria-label="Horn B">
-  <div class="stars"></div>
-  <div class="orb orb-crimson" style="width:45%;height:45%;bottom:0%;right:0%;opacity:0.6;"></div>
-  <div class="slide-content">
-    <div class="slide-header reveal">
-      <div class="slide-label">Horn B — The Arbitrariness Horn</div>
-      <h2 class="slide-title">"It is good <span class="gold">because</span> God commands it"</h2>
-      <div class="gold-rule reveal" style="transition-delay:0.1s;"></div>
-    </div>
-
-    <div class="two-col reveal" style="transition-delay:0.2s;">
-      <div>
-        <p style="font-family:var(--font-body);font-size:var(--body-size);color:var(--cream-dim);line-height:1.6;margin-bottom:clamp(0.4rem,1vh,0.8rem);">
-          If God's commands create moral facts from scratch, then there was no moral reason for God to issue those commands rather than their opposites.
-        </p>
-        <ul class="bullet-list">
-          <li><strong>The Arbitrariness Objection:</strong> If God commanded torture of innocents, would it be obligatory? Horn B says yes — and that's monstrous.</li>
-          <li><strong>The Changeable Morality Problem:</strong> If God changed His commands, morality would flip overnight. "Murder is wrong" becomes contingent, not necessary.</li>
-          <li><strong>The Empty Praise Problem:</strong> Calling God "good" becomes meaningless — it just means God obeys His own commands.</li>
-        </ul>
-      </div>
-      <div>
-        <div class="col-card">
-          <div class="col-card-title">Strengths of This Horn</div>
-          <div class="col-card-body">Preserves divine sovereignty fully. God is the uncaused source of all being and value. Upholds the biblical picture of God as the supreme authority.</div>
-        </div>
-        <div class="col-card crimson" style="margin-top:clamp(0.5rem,1.5vh,1rem);">
-          <div class="col-card-title">Weaknesses</div>
-          <div class="col-card-body">William of Ockham accepted this. But most theists find it intolerable that "God is good" would be a tautology and genocide could be holy on God's whim.</div>
-        </div>
-      </div>
-    </div>
-  </div>
   <div class="slide-num">05 / 13</div>
 </section>
 
@@ -783,23 +784,27 @@
       <div class="gold-rule reveal" style="transition-delay:0.1s;"></div>
     </div>
 
-    <ul class="bullet-list reveal" style="transition-delay:0.2s;">
-      <li><strong>Core Claim:</strong> An act is morally obligatory if and only if God commands it; morally wrong if and only if God forbids it. Morality is constituted by divine commands.</li>
-      <li><strong>Key Proponents:</strong> William of Ockham (medieval), Robert Adams (modified version), John Duns Scotus.</li>
-      <li><strong>Biblical basis:</strong> Genesis 22 (Abraham/Isaac) is frequently cited — God commanding what seems horrific suggests morality follows command, not prior reason.</li>
-      <li><strong>Modified DCT (Adams):</strong> God commands only what is consistent with His essentially loving nature. This attempted to escape arbitrariness, but critics argue it smuggles in a pre-existing standard of love.</li>
-    </ul>
-
-    <div class="accent-box crimson reveal" style="transition-delay:0.5s;">
-      <strong>Key Debate Vulnerability:</strong> DCT collapses the is-ought distinction entirely — moral facts reduce to facts about what God says. Critics (Kant, Plato) argue this makes ethics heteronomous and eliminates genuine moral reasoning.
+    <div class="two-col reveal" style="transition-delay:0.2s;">
+      <div>
+        <div style="font-family:var(--font-heading);font-size:var(--small-size);color:var(--gold);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:0.5em;">Pure DCT (Horn 1 Straight)</div>
+        <ul class="bullet-list">
+          <li><strong>Core Claim:</strong> An act is morally obligatory if and only if God commands it. Morality is constituted entirely by divine will — no prior standard exists.</li>
+          <li><strong>Proponents:</strong> William of Ockham, John Duns Scotus. Biblical basis: Genesis 22 (Abraham/Isaac) — God commanding what seems horrific suggests morality follows command, not prior reason.</li>
+          <li><strong>Fully accepts the arbitrariness horn.</strong> God could have commanded cruelty. The position is internally consistent — and theologically catastrophic.</li>
+        </ul>
+      </div>
+      <div>
+        <div style="font-family:var(--font-heading);font-size:var(--small-size);color:var(--gold);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:0.5em;">Modified Voluntarism (Robert Adams)</div>
+        <ul class="bullet-list">
+          <li><strong>The Patch:</strong> God commands only what is consistent with His essentially <em>loving</em> nature. Arbitrariness is constrained — cruelty is off the table because love is essential to what God is.</li>
+          <li><strong>Still DCT?</strong> Barely. Commands still do the grounding work, but nature constrains them. Critics say this quietly abandons voluntarism — if nature constrains commands, nature is doing the real work, not the commands.</li>
+          <li><strong>The Regress:</strong> Why is a <em>loving</em> nature the moral standard rather than some other nature? Either love is independently good (Horn 2 smuggled back in) or it's arbitrary — arbitrariness relocated, not eliminated.</li>
+        </ul>
+      </div>
     </div>
 
-    <div class="tag-row reveal" style="transition-delay:0.6s;">
-      <span class="tag active">Metaethics</span>
-      <span class="tag">Moral Ontology</span>
-      <span class="tag active">Divine Sovereignty</span>
-      <span class="tag">Heteronomy</span>
-      <span class="tag">Ockham</span>
+    <div class="accent-box crimson reveal" style="transition-delay:0.5s;">
+      <strong>Key Distinction:</strong> Pure DCT grounds morality in God's <em>commands</em>. Modified Voluntarism tries to constrain commands via nature. Divine Nature Theory (DNT) drops commands entirely and grounds morality in God's <em>nature</em> alone. Each is a distinct position — they are often conflated, but the difference matters in rounds.
     </div>
   </div>
   <div class="slide-num">06 / 13</div>
@@ -826,7 +831,7 @@
     <ul class="bullet-list reveal" style="transition-delay:0.35s;margin-top:clamp(0.4rem,1.2vh,1rem);">
       <li><strong>The Move:</strong> Reject the assumption that the only options are (A) external moral standard or (B) arbitrary will. Locate morality in God's <em>nature itself</em>.</li>
       <li><strong>Key Distinction:</strong> God does not consult an external standard, nor does He arbitrarily decree. He <em>is</em> the standard. His commands flow necessarily from His essential character.</li>
-      <li><strong>How it escapes Horn B:</strong> Cruelty could never be commanded because God is essentially good — it is metaphysically impossible, not merely unlikely.</li>
+      <li><strong>How it escapes Horn 1:</strong> Cruelty could never be commanded because God is essentially good — it is metaphysically impossible, not merely unlikely.</li>
     </ul>
 
     <div class="accent-box reveal" style="transition-delay:0.5s;">
