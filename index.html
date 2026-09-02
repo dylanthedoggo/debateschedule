@@ -1,1172 +1,446 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>The Euthyphro Dilemma</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Research Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  <style>
-    /* === THEME =========================================== */
-    :root {
-      --bg-void: #0a0818;
-      --bg-deep: #0f0c22;
-      --bg-mid: #16132e;
-      --gold: #c9a227;
-      --gold-bright: #f0c842;
-      --gold-dim: #7a6218;
-      --gold-glow: rgba(201, 162, 39, 0.18);
-      --cream: #f5f0e3;
-      --cream-dim: #c9c4b4;
-      --crimson: #8b1a1a;
-      --crimson-bright: #cc3333;
-      --ethereal: #3a2d6e;
-      --text-main: #f5f0e3;
-      --text-sub: #b8b0a0;
-      --font-display: 'Cinzel Decorative', serif;
-      --font-heading: 'Cinzel', serif;
-      --font-body: 'EB Garamond', serif;
-      --title-size: clamp(1.4rem, 4.5vw, 3.8rem);
-      --h2-size: clamp(1.1rem, 3vw, 2.2rem);
-      --h3-size: clamp(0.95rem, 2.2vw, 1.6rem);
-      --body-size: clamp(0.78rem, 1.4vw, 1.1rem);
-      --small-size: clamp(0.65rem, 1vw, 0.85rem);
-      --slide-padding: clamp(1.5rem, 4vw, 5rem);
-      --content-gap: clamp(0.6rem, 2vw, 1.8rem);
-    }
+  :root {
+    --bg:       #080c18;
+    --surface:  #0f1629;
+    --border:   #1e2a47;
+    --gold:     #c8921a;
+    --gold-lt:  #e8ae46;
+    --text:     #d8dde8;
+    --muted:    #6a738c;
+    --tag-hs:   #1a3a5c;
+    --tag-sjc:  #1a2e1a;
+    --tag-hlt:  #2e1a2e;
+    --tag-sat:  #2e2a1a;
+    --hs-acc:   #3b8fd4;
+    --sjc-acc:  #4caf7a;
+    --hlt-acc:  #b06fd4;
+    --sat-acc:  #d4a43a;
+  }
 
-    /* === RESET =========================================== */
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 17px;
+    min-height: 100vh;
+    padding: 0;
+    overflow-x: hidden;
+  }
 
-    /* === KEYFRAME ANIMATIONS ============================= */
-    @keyframes orbPulse {
-      0%, 100% { opacity: 0.75; transform: scale(1); }
-      50% { opacity: 1; transform: scale(1.12); }
-    }
-    @keyframes orbDrift {
-      0%, 100% { transform: translate(0, 0) scale(1); }
-      33% { transform: translate(3%, 2%) scale(1.06); }
-      66% { transform: translate(-2%, 4%) scale(0.97); }
-    }
-    @keyframes haloSpin {
-      from { transform: translate(-50%, -50%) rotate(0deg); }
-      to   { transform: translate(-50%, -50%) rotate(360deg); }
-    }
-    @keyframes haloCounter {
-      from { transform: translate(-50%, -50%) rotate(0deg); }
-      to   { transform: translate(-50%, -50%) rotate(-360deg); }
-    }
-    @keyframes titleGlow {
-      0%, 100% { text-shadow: 0 0 60px rgba(201,162,39,0.35), 0 0 120px rgba(201,162,39,0.12), 0 2px 4px rgba(0,0,0,0.8); }
-      50%       { text-shadow: 0 0 100px rgba(201,162,39,0.6), 0 0 200px rgba(201,162,39,0.25), 0 2px 4px rgba(0,0,0,0.8); }
-    }
-    @keyframes shimmerRule {
-      0%   { background-position: -300px center; }
-      100% { background-position: 300px center; }
-    }
-    @keyframes twinkle {
-      0%, 100% { opacity: 1; }
-      40% { opacity: 0.45; }
-      70% { opacity: 0.8; }
-    }
-    @keyframes floatBox {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-5px); }
-    }
-    @keyframes revealScale {
-      from { opacity: 0; transform: translateY(28px) scale(0.97); }
-      to   { opacity: 1; transform: translateY(0) scale(1); }
-    }
-    @keyframes runeGlow {
-      0%, 100% { box-shadow: 0 0 0 rgba(201,162,39,0); }
-      50% { box-shadow: 0 0 30px rgba(201,162,39,0.12), inset 0 0 20px rgba(201,162,39,0.04); }
-    }
-    @keyframes progressShimmer {
-      0% { background-position: -200% center; }
-      100% { background-position: 200% center; }
-    }
+  /* ── HEADER ── */
+  header {
+    padding: 3.5rem 2rem 2.5rem;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    background: linear-gradient(180deg, #0b1024 0%, var(--bg) 100%);
+  }
 
-    /* === VIEWPORT BASE (mandatory) ====================== */
-    html, body { height: 100%; overflow-x: hidden; }
-    html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
-    body { background: var(--bg-void); color: var(--text-main); font-family: var(--font-body); }
+  .cred-box {
+    position: absolute;
+    top: 1.1rem;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 0.4rem 0.65rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    line-height: 1.75;
+    color: var(--muted);
+    text-align: left;
+    white-space: nowrap;
+  }
+  .cred-box.left  { left: 1.2rem; }
+  .cred-box.left  { left: 1.2rem; }
+  .cred-box.right { right: 1.2rem; text-align: right; }
+  .cred-cover {
+    position: absolute;
+    inset: 0;
+    background: #0f1629;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--border);
+    transition: opacity 0.25s;
+    pointer-events: none;
+  }
+  .cred-box:hover .cred-cover { opacity: 0; }
+  .cred-label {
+    display: block;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    opacity: 0.7;
+    margin-bottom: 1px;
+  }
 
-    .slide {
-      width: 100vw;
-      height: 100vh;
-      height: 100dvh;
-      overflow: hidden;
-      scroll-snap-align: start;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-    }
+  header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%; transform: translateX(-50%);
+    width: 1px;
+    height: 100%;
+    background: linear-gradient(180deg, transparent, var(--gold), transparent);
+    opacity: 0.25;
+  }
 
-    .slide-content {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      max-height: 100%;
-      overflow: hidden;
-      padding: var(--slide-padding);
-    }
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+    opacity: 0.9;
+  }
 
-    /* === STARFIELD BACKGROUND =========================== */
-    .stars {
-      position: absolute; inset: 0;
-      pointer-events: none;
-      overflow: hidden;
-    }
-    .stars::before, .stars::after {
-      content: '';
-      position: absolute; inset: 0;
-      animation: twinkle 8s ease-in-out infinite;
-      background-image:
-        radial-gradient(1.5px 1.5px at 10% 15%, rgba(255,255,255,0.85) 0%, transparent 100%),
-        radial-gradient(1px 1px at 25% 60%, rgba(255,255,255,0.7) 0%, transparent 100%),
-        radial-gradient(2px 2px at 40% 30%, rgba(255,255,255,0.75) 0%, transparent 100%),
-        radial-gradient(1px 1px at 55% 80%, rgba(255,255,255,0.55) 0%, transparent 100%),
-        radial-gradient(1.5px 1.5px at 70% 20%, rgba(255,255,255,0.8) 0%, transparent 100%),
-        radial-gradient(2.5px 2.5px at 80% 55%, rgba(255,255,255,0.6) 0%, transparent 100%),
-        radial-gradient(1px 1px at 90% 40%, rgba(255,255,255,0.65) 0%, transparent 100%),
-        radial-gradient(1px 1px at 15% 85%, rgba(255,255,255,0.55) 0%, transparent 100%),
-        radial-gradient(1.5px 1.5px at 62% 12%, rgba(255,255,255,0.8) 0%, transparent 100%),
-        radial-gradient(1px 1px at 35% 92%, rgba(255,255,255,0.65) 0%, transparent 100%),
-        radial-gradient(2px 2px at 48% 48%, rgba(201,162,39,0.7) 0%, transparent 100%),
-        radial-gradient(2px 2px at 77% 77%, rgba(201,162,39,0.55) 0%, transparent 100%);
-    }
-    .stars::after {
-      animation-delay: -4s;
-      animation-duration: 11s;
-      background-image:
-        radial-gradient(1px 1px at 5% 45%, rgba(255,255,255,0.65) 0%, transparent 100%),
-        radial-gradient(1.5px 1.5px at 20% 10%, rgba(255,255,255,0.8) 0%, transparent 100%),
-        radial-gradient(1px 1px at 38% 68%, rgba(255,255,255,0.55) 0%, transparent 100%),
-        radial-gradient(2px 2px at 52% 35%, rgba(255,255,255,0.7) 0%, transparent 100%),
-        radial-gradient(1px 1px at 65% 90%, rgba(255,255,255,0.55) 0%, transparent 100%),
-        radial-gradient(2px 2px at 85% 15%, rgba(255,255,255,0.8) 0%, transparent 100%),
-        radial-gradient(1px 1px at 93% 70%, rgba(255,255,255,0.65) 0%, transparent 100%),
-        radial-gradient(2px 2px at 30% 50%, rgba(201,162,39,0.5) 0%, transparent 100%),
-        radial-gradient(1.5px 1.5px at 72% 30%, rgba(255,255,255,0.6) 0%, transparent 100%),
-        radial-gradient(1px 1px at 8% 70%, rgba(255,255,255,0.55) 0%, transparent 100%),
-        radial-gradient(2px 2px at 44% 5%, rgba(255,255,255,0.75) 0%, transparent 100%);
-    }
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.2rem, 6vw, 3.5rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: #f0f4ff;
+    margin-bottom: 0.75rem;
+  }
 
-    /* === ORB DECORATION ================================= */
-    .orb {
-      position: absolute;
-      border-radius: 50%;
-      pointer-events: none;
-      filter: blur(55px);
-      animation: orbDrift 18s ease-in-out infinite;
-    }
-    .orb-gold {
-      background: radial-gradient(circle, rgba(201,162,39,0.55) 0%, rgba(201,162,39,0.15) 50%, transparent 70%);
-    }
-    .orb-deep {
-      background: radial-gradient(circle, rgba(80,60,160,0.65) 0%, rgba(58,45,110,0.2) 50%, transparent 70%);
-    }
-    .orb-crimson {
-      background: radial-gradient(circle, rgba(180,40,40,0.55) 0%, rgba(139,26,26,0.15) 50%, transparent 70%);
-    }
-    .orb:nth-child(odd)  { animation-duration: 22s; }
-    .orb:nth-child(even) { animation-duration: 16s; animation-direction: reverse; }
+  h1 span { color: var(--gold); }
 
-    /* === DIVIDER LINE =================================== */
-    .gold-rule {
-      width: clamp(40px, 8vw, 120px);
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--gold) 40%, var(--gold-bright) 50%, var(--gold) 60%, transparent);
-      background-size: 300px 1px;
-      animation: shimmerRule 3s linear infinite;
-      margin: clamp(0.4rem, 1.2vh, 1rem) 0;
-    }
-    .gold-rule.wide {
-      width: clamp(80px, 20vw, 300px);
-    }
-    .gold-rule.center { margin-left: auto; margin-right: auto; }
+  .subtitle {
+    font-style: italic;
+    color: var(--muted);
+    font-size: 1rem;
+    font-weight: 300;
+  }
 
-    /* === SLIDE NUMBER =================================== */
-    .slide-num {
-      position: absolute;
-      bottom: clamp(1rem, 2vh, 2rem);
-      right: clamp(1.5rem, 3vw, 3rem);
-      font-family: var(--font-heading);
-      font-size: var(--small-size);
-      color: var(--gold-dim);
-      letter-spacing: 0.15em;
-    }
+  /* ── GRID ── */
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 4rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    align-items: start;
+  }
 
-    /* === REVEAL ANIMATION ============================== */
-    .reveal {
-      opacity: 0;
-      transform: translateY(28px) scale(0.97);
-      transition: opacity 0.75s cubic-bezier(0.16,1,0.3,1), transform 0.75s cubic-bezier(0.16,1,0.3,1);
-    }
-    .slide.visible .reveal { opacity: 1; transform: translateY(0) scale(1); }
-    .reveal:nth-child(1) { transition-delay: 0.05s; }
-    .reveal:nth-child(2) { transition-delay: 0.18s; }
-    .reveal:nth-child(3) { transition-delay: 0.31s; }
-    .reveal:nth-child(4) { transition-delay: 0.44s; }
-    .reveal:nth-child(5) { transition-delay: 0.57s; }
-    .reveal:nth-child(6) { transition-delay: 0.70s; }
-    .reveal:nth-child(7) { transition-delay: 0.83s; }
+  /* ── CATEGORY CARD ── */
+  .cat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
 
-    /* === PROGRESS BAR =================================== */
-    .progress-bar {
-      position: fixed; top: 0; left: 0; right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, var(--gold-dim), var(--gold), var(--gold-bright), var(--gold), var(--gold-dim));
-      background-size: 200% 100%;
-      animation: progressShimmer 2.5s linear infinite;
-      transform-origin: left;
-      transform: scaleX(0);
-      transition: transform 0.35s ease;
-      z-index: 1000;
-    }
+  .cat:hover { border-color: #2e3a5c; }
 
-    /* === NAV DOTS ======================================= */
-    .nav-dots {
-      position: fixed; right: clamp(0.6rem, 1.5vw, 1.2rem); top: 50%;
-      transform: translateY(-50%);
-      display: flex; flex-direction: column; gap: clamp(5px, 1vh, 8px);
-      z-index: 999;
-    }
-    .nav-dot {
-      width: clamp(5px, 0.7vw, 7px);
-      height: clamp(5px, 0.7vw, 7px);
-      border-radius: 50%;
-      background: var(--gold-dim);
-      cursor: pointer;
-      transition: all 0.35s cubic-bezier(0.34,1.56,0.64,1);
-      border: 1px solid transparent;
-    }
-    .nav-dot.active { background: var(--gold); box-shadow: 0 0 8px var(--gold), 0 0 16px rgba(201,162,39,0.3); transform: scale(1.5); }
+  .cat-header {
+    padding: 1.1rem 1.4rem 1rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
 
-    /* ====================================================
-       SLIDE 1: TITLE
-       ==================================================== */
-    .title-slide {
-      background: radial-gradient(ellipse at 50% 40%, #251a48 0%, #110d28 40%, #0a0818 100%);
-      justify-content: center; align-items: center; text-align: center;
-    }
-    .title-slide .inner { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; }
-    .eyebrow {
-      font-family: var(--font-heading);
-      font-size: var(--small-size);
-      letter-spacing: 0.35em;
-      color: var(--gold);
-      text-transform: uppercase;
-      margin-bottom: clamp(0.5rem, 1.5vh, 1.2rem);
-    }
-    .title-main {
-      font-family: var(--font-display);
-      font-size: clamp(2rem, 6vw, 5.5rem);
-      font-weight: 700;
-      color: var(--cream);
-      line-height: 1.1;
-      animation: titleGlow 4s ease-in-out infinite;
-      max-width: 14ch;
-    }
-    .title-sub {
-      font-family: var(--font-body);
-      font-style: italic;
-      font-size: clamp(0.9rem, 1.8vw, 1.4rem);
-      color: var(--cream-dim);
-      margin-top: clamp(0.6rem, 1.5vh, 1.2rem);
-    }
-    .title-tag {
-      margin-top: clamp(0.8rem, 2vh, 1.5rem);
-      font-family: var(--font-heading);
-      font-size: var(--small-size);
-      color: var(--gold-dim);
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-    }
-    /* Halo rings — animated */
-    .halo-ring {
-      position: absolute;
-      border-radius: 50%;
-      border: 1px solid rgba(201,162,39,0.18);
-      pointer-events: none;
-    }
-    .halo-ring:nth-child(2) {
-      animation: haloSpin 45s linear infinite;
-      border-style: dashed;
-      border-color: rgba(201,162,39,0.1);
-    }
-    .halo-ring:nth-child(3) {
-      animation: haloCounter 60s linear infinite;
-      border-color: rgba(201,162,39,0.07);
-    }
+  .cat-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
 
-    /* ====================================================
-       CONTENT SLIDES — BASE
-       ==================================================== */
-    .content-slide {
-      background: var(--bg-void);
-    }
-    .slide-header {
-      margin-bottom: clamp(0.5rem, 2vh, 1.5rem);
-    }
-    .slide-label {
-      font-family: var(--font-heading);
-      font-size: var(--small-size);
-      color: var(--gold);
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      margin-bottom: clamp(0.2rem, 0.6vh, 0.5rem);
-    }
-    .slide-title {
-      font-family: var(--font-heading);
-      font-size: var(--h2-size);
-      font-weight: 600;
-      color: var(--cream);
-      line-height: 1.2;
-    }
-    .slide-title .gold { color: var(--gold); }
+  .cat-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
 
-    /* ====================================================
-       QUOTE STYLE
-       ==================================================== */
-    .big-quote {
-      background: linear-gradient(135deg, #100d22 0%, #07050f 100%);
-      border-left: 2px solid var(--gold);
-      padding: clamp(0.8rem, 2vh, 1.8rem) clamp(1rem, 2.5vw, 2.5rem);
-      font-family: var(--font-body);
-      font-style: italic;
-      font-size: clamp(0.85rem, 1.8vw, 1.25rem);
-      color: var(--cream);
-      line-height: 1.65;
-      position: relative;
-    }
-    .big-quote .attribution {
-      display: block;
-      margin-top: clamp(0.4rem, 1vh, 0.8rem);
-      font-style: normal;
-      font-family: var(--font-heading);
-      font-size: var(--small-size);
-      color: var(--gold-dim);
-      letter-spacing: 0.15em;
-    }
+  .cat-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    margin-left: auto;
+    letter-spacing: 0.05em;
+  }
 
-    /* ====================================================
-       BULLET LIST STYLE
-       ==================================================== */
-    .bullet-list { list-style: none; display: flex; flex-direction: column; gap: clamp(0.4rem, 1.2vh, 1rem); }
-    .bullet-list li {
-      font-family: var(--font-body);
-      font-size: var(--body-size);
-      color: var(--cream-dim);
-      line-height: 1.55;
-      padding-left: clamp(1rem, 2vw, 1.5rem);
-      position: relative;
-    }
-    .bullet-list li::before {
-      content: '✦';
-      position: absolute; left: 0;
-      color: var(--gold);
-      font-size: 0.65em;
-      top: 0.25em;
-    }
-    .bullet-list li strong { color: var(--cream); font-weight: 500; }
-    .bullet-list li em { color: var(--gold); font-style: normal; }
+  /* color accents per category */
+  .hs .cat-icon  { background: var(--tag-hs);  }
+  .sjc .cat-icon { background: var(--tag-sjc); }
+  .hlt .cat-icon { background: var(--tag-hlt); }
+  .sat .cat-icon { background: var(--tag-sat); }
+  .hs  .cat-title { color: var(--hs-acc);  }
+  .sjc .cat-title { color: var(--sjc-acc); }
+  .hlt .cat-title { color: var(--hlt-acc); }
+  .sat .cat-title { color: var(--sat-acc); }
+  .hs  .cat-icon svg path  { stroke: var(--hs-acc);  }
+  .sjc .cat-icon svg path  { stroke: var(--sjc-acc); }
+  .hlt .cat-icon svg path  { stroke: var(--hlt-acc); }
+  .sat .cat-icon svg path  { stroke: var(--sat-acc); }
 
-    /* ====================================================
-       TWO-COLUMN LAYOUT
-       ==================================================== */
-    .two-col {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: clamp(0.8rem, 2.5vw, 2.5rem);
-      align-items: start;
-    }
-    .col-card {
-      padding: clamp(0.8rem, 2vh, 1.5rem);
-      border: 1px solid rgba(201,162,39,0.2);
-      background: rgba(18,14,40,0.7);
-      position: relative;
-      animation: runeGlow 5s ease-in-out infinite;
-    }
-    .col-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--gold), transparent);
-    }
-    .col-card-title {
-      font-family: var(--font-heading);
-      font-size: var(--h3-size);
-      color: var(--gold);
-      margin-bottom: clamp(0.4rem, 1vh, 0.8rem);
-      letter-spacing: 0.05em;
-    }
-    .col-card-body {
-      font-family: var(--font-body);
-      font-size: var(--body-size);
-      color: var(--cream-dim);
-      line-height: 1.55;
-    }
-    .col-card.crimson::before {
-      background: linear-gradient(90deg, transparent, var(--crimson-bright), transparent);
-    }
-    .col-card.crimson .col-card-title { color: var(--crimson-bright); }
-    .col-card.crimson { border-color: rgba(139,26,26,0.3); }
+  /* ── LINKS LIST ── */
+  .links { padding: 0.5rem 0; }
 
-    /* ====================================================
-       DILEMMA DIAGRAM
-       ==================================================== */
-    .dilemma-center {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: clamp(0.5rem, 1.5vh, 1.2rem);
-    }
-    .dilemma-question {
-      text-align: center;
-      padding: clamp(0.6rem, 1.5vh, 1.2rem) clamp(1rem, 3vw, 2rem);
-      border: 1px solid var(--gold);
-      font-family: var(--font-body);
-      font-style: italic;
-      font-size: clamp(0.8rem, 1.5vw, 1.1rem);
-      color: var(--cream);
-      background: rgba(201,162,39,0.06);
-      max-width: 70ch;
-      line-height: 1.5;
-      animation: floatBox 6s ease-in-out infinite;
-      box-shadow: 0 0 40px rgba(201,162,39,0.08), inset 0 0 30px rgba(201,162,39,0.04);
-    }
-    .dilemma-arrows {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: clamp(0.6rem, 2vw, 2rem);
-      width: 100%;
-      max-width: 900px;
-    }
-    .dilemma-horn {
-      padding: clamp(0.6rem, 1.5vh, 1.2rem);
-      text-align: center;
-      border: 1px solid rgba(201,162,39,0.2);
-      background: rgba(7,5,15,0.8);
-      position: relative;
-    }
-    .dilemma-horn .horn-label {
-      font-family: var(--font-heading);
-      font-size: var(--small-size);
-      letter-spacing: 0.2em;
-      color: var(--gold-dim);
-      text-transform: uppercase;
-      margin-bottom: 0.3em;
-    }
-    .dilemma-horn .horn-text {
-      font-family: var(--font-body);
-      font-size: var(--body-size);
-      color: var(--cream-dim);
-      line-height: 1.5;
-    }
-    .dilemma-horn .horn-problem {
-      margin-top: 0.5em;
-      font-family: var(--font-body);
-      font-style: italic;
-      font-size: var(--small-size);
-      color: var(--crimson-bright);
-    }
-    .arrow-down {
-      width: 1px;
-      height: clamp(16px, 2.5vh, 30px);
-      background: var(--gold-dim);
-      margin: 0 auto;
-      position: relative;
-    }
-    .arrow-down::after {
-      content: '▼';
-      position: absolute;
-      bottom: calc(-1 * clamp(8px, 1.2vh, 14px));
-      left: 50%;
-      transform: translateX(-50%);
-      color: var(--gold-dim);
-      font-size: clamp(6px, 1vh, 10px);
-    }
+  .db-link {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.65rem 1.4rem;
+    text-decoration: none;
+    transition: background 0.15s;
+    cursor: pointer;
+  }
 
-    /* ====================================================
-       HORN SLIDES — color coding
-       ==================================================== */
-    .horn-2 { background: radial-gradient(ellipse at 80% 20%, #252206 0%, #16140a 40%, #0a0818 100%); }
-    .horn-1 { background: radial-gradient(ellipse at 20% 80%, #280f0f 0%, #180b0b 40%, #0a0818 100%); }
-    .aquinas-slide { background: radial-gradient(ellipse at 50% 50%, #0d1628 0%, #0a1020 40%, #0a0818 100%); }
-    .dct-slide { background: radial-gradient(ellipse at 30% 30%, #1a1428 0%, #110e1e 40%, #0a0818 100%); }
-    .dnt-slide { background: radial-gradient(ellipse at 70% 70%, #101a0c 0%, #0d1409 40%, #0a0818 100%); }
+  .db-link:hover { background: rgba(255,255,255,0.04); }
 
-    /* Content slide ambient glow */
-    .content-slide {
-      background: radial-gradient(ellipse at 50% 50%, #0e0b1e 0%, #0a0818 70%);
-    }
+  .db-link:hover .db-name { color: #f0f4ff; }
+  .db-link:hover .arrow { opacity: 1; transform: translateX(2px); }
 
-    /* === ACCENT BOX ===================================== */
-    .accent-box {
-      padding: clamp(0.6rem, 1.5vh, 1.2rem) clamp(0.8rem, 2vw, 1.5rem);
-      background: rgba(201,162,39,0.07);
-      border-left: 2px solid var(--gold);
-      font-family: var(--font-body);
-      font-size: var(--body-size);
-      color: var(--cream-dim);
-      line-height: 1.55;
-      margin-top: clamp(0.4rem, 1vh, 0.8rem);
-    }
-    .accent-box strong { color: var(--gold); font-weight: 500; }
-    .accent-box.crimson { border-left-color: var(--crimson-bright); background: rgba(139,26,26,0.07); }
-    .accent-box.crimson strong { color: var(--crimson-bright); }
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    opacity: 0.6;
+  }
+  .hs  .dot { background: var(--hs-acc);  }
+  .sjc .dot { background: var(--sjc-acc); }
+  .hlt .dot { background: var(--hlt-acc); }
+  .sat .dot { background: var(--sat-acc); }
 
-    /* === KEYWORD TAG ==================================== */
-    .tag-row {
-      display: flex; flex-wrap: wrap; gap: clamp(0.3rem, 0.8vw, 0.6rem);
-      margin-top: clamp(0.4rem, 1vh, 0.8rem);
-    }
-    .tag {
-      font-family: var(--font-heading);
-      font-size: var(--small-size);
-      letter-spacing: 0.1em;
-      padding: 0.2em 0.7em;
-      border: 1px solid var(--gold-dim);
-      color: var(--gold-dim);
-    }
-    .tag.active { border-color: var(--gold); color: var(--gold); background: rgba(201,162,39,0.08); }
+  .db-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--text);
+    flex: 1;
+    line-height: 1.4;
+  }
 
-    /* === CLOSING SLIDE ================================= */
-    .closing-slide {
-      background: radial-gradient(ellipse at 50% 50%, #251a48 0%, #110d28 40%, #0a0818 100%);
-      justify-content: center; align-items: center; text-align: center;
-    }
-    .closing-slide .closing-inner {
-      position: relative; z-index: 2;
-      display: flex; flex-direction: column; align-items: center;
-    }
-    .closing-title {
-      font-family: var(--font-display);
-      font-size: clamp(1.5rem, 4vw, 3.5rem);
-      color: var(--cream);
-      margin-bottom: clamp(0.5rem, 1.5vh, 1.2rem);
-    }
-    .closing-sub {
-      font-family: var(--font-body);
-      font-style: italic;
-      font-size: clamp(0.85rem, 1.5vw, 1.15rem);
-      color: var(--cream-dim);
-      max-width: 55ch;
-      line-height: 1.6;
-    }
+  .arrow {
+    font-size: 11px;
+    color: var(--muted);
+    opacity: 0;
+    transition: opacity 0.15s, transform 0.15s;
+  }
 
-    /* ====================================================
-       RESPONSIVE BREAKPOINTS
-       ==================================================== */
-    @media (max-height: 700px) {
-      :root {
-        --slide-padding: clamp(0.8rem, 3vw, 2.5rem);
-        --content-gap: clamp(0.4rem, 1.5vh, 1rem);
-        --h2-size: clamp(1rem, 2.8vw, 1.8rem);
-        --body-size: clamp(0.72rem, 1.3vw, 1rem);
-      }
-    }
-    @media (max-height: 600px) {
-      :root {
-        --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem);
-        --content-gap: clamp(0.3rem, 1vh, 0.7rem);
-        --h2-size: clamp(0.9rem, 2.5vw, 1.5rem);
-        --body-size: clamp(0.68rem, 1.1vw, 0.9rem);
-      }
-      .nav-dots, .decorative { display: none; }
-    }
-    @media (max-height: 500px) {
-      :root {
-        --slide-padding: clamp(0.4rem, 2vw, 1rem);
-        --h2-size: clamp(0.85rem, 2.2vw, 1.3rem);
-        --body-size: clamp(0.65rem, 1vw, 0.82rem);
-      }
-    }
-    @media (max-width: 600px) {
-      .two-col { grid-template-columns: 1fr; }
-      .dilemma-arrows { grid-template-columns: 1fr; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        transition-duration: 0.2s !important;
-      }
-      html { scroll-behavior: auto; }
-    }
-  </style>
+  /* ── PLACEHOLDER ── */
+  .placeholder {
+    padding: 1.5rem 1.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .placeholder-line {
+    height: 36px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 6px;
+    border: 1px dashed var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+  }
+
+  .placeholder-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    opacity: 0.5;
+  }
+
+  .add-note {
+    font-family: 'Crimson Pro', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--muted);
+    padding: 0 1.4rem 1rem;
+    opacity: 0.7;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 2rem;
+    border-top: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  /* ── SVG ICONS ── */
+  .cat-icon svg {
+    width: 18px;
+    height: 18px;
+  }
+  .cat-icon svg path,
+  .cat-icon svg rect,
+  .cat-icon svg circle,
+  .cat-icon svg polyline,
+  .cat-icon svg line {
+    fill: none;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+</style>
 </head>
 <body>
 
-<div class="progress-bar" id="progressBar"></div>
-<nav class="nav-dots" id="navDots" aria-label="Slide navigation"></nav>
-
-<!-- ======================================================
-     SLIDE 1: TITLE
-     ====================================================== -->
-<section class="slide title-slide" aria-label="Title slide">
-  <div class="stars"></div>
-  <!-- Halo rings decorative -->
-  <div class="halo-ring" style="width:min(60vh,500px);height:min(60vh,500px);top:50%;left:50%;transform:translate(-50%,-50%);"></div>
-  <div class="halo-ring" style="width:min(80vh,700px);height:min(80vh,700px);top:50%;left:50%;transform:translate(-50%,-50%);border-color:rgba(201,162,39,0.06);"></div>
-  <div class="orb orb-gold" style="width:40%;height:40%;top:30%;left:30%;"></div>
-  <div class="orb orb-deep" style="width:50%;height:50%;top:20%;left:40%;"></div>
-
-  <div class="inner reveal">
-    <div class="eyebrow">Philosophical Theology · Debate Preparation</div>
-    <h1 class="title-main">The Euthyphro Dilemma</h1>
-    <div class="gold-rule center wide reveal" style="transition-delay:0.3s;"></div>
-    <p class="title-sub reveal" style="transition-delay:0.4s;">Is something good because God commands it, or does God command it because it is good?</p>
-    <p class="title-tag reveal" style="transition-delay:0.55s;">Plato · Aquinas · Divine Command Theory · Divine Nature Theory</p>
+<header>
+  <div class="cred-box left">
+    <span class="cred-label">HS Login</span>
+    PW: 3duc*t3
+    <div class="cred-cover">● ● ●</div>
   </div>
-  <div class="slide-num">01 / 13</div>
-</section>
-
-<!-- ======================================================
-     SLIDE 2: ORIGINS
-     ====================================================== -->
-<section class="slide content-slide" aria-label="Origins">
-  <div class="stars"></div>
-  <div class="orb orb-deep" style="width:50%;height:60%;top:-10%;right:-10%;"></div>
-  <div class="slide-content">
-    <div class="slide-header reveal">
-      <div class="slide-label">Origins &amp; Context</div>
-      <h2 class="slide-title">The Dialogue of <span class="gold">Euthyphro</span></h2>
-      <div class="gold-rule reveal" style="transition-delay:0.15s;"></div>
-    </div>
-
-    <div class="big-quote reveal" style="transition-delay:0.2s;">
-      "Is the pious loved by the gods because it is pious, or is it pious because it is loved by the gods?"
-      <span class="attribution">— Socrates, in Plato's Euthyphro (~399 BC)</span>
-    </div>
-
-    <ul class="bullet-list reveal" style="transition-delay:0.3s;margin-top:clamp(0.5rem,1.5vh,1.2rem);">
-      <li><strong>Setting:</strong> Socrates encounters Euthyphro outside an Athenian court. Euthyphro is prosecuting his own father for impiety. Socrates asks him to define "piety."</li>
-      <li><strong>The Trap:</strong> Euthyphro claims piety is what the gods love. Socrates exposes a fatal ambiguity — a dilemma with two unacceptable horns.</li>
-      <li><strong>Why it matters:</strong> The dilemma strikes at the foundation of any morality rooted in divine authority, and still drives contemporary debates in philosophy of religion.</li>
-    </ul>
+  <div class="cred-box right">
+    <span class="cred-label">SJC Login</span>
+    User: G01228275<br>PW: Mcda08302009
+    <div class="cred-cover">● ● ●</div>
   </div>
-  <div class="slide-num">02 / 13</div>
-</section>
+  <p class="eyebrow">Research Access Portal</p>
+  <h1>Database <span>Hub</span></h1>
+  <p class="subtitle">Academic &amp; debate research, centralized.</p>
+</header>
 
-<!-- ======================================================
-     SLIDE 3: THE CENTRAL QUESTION
-     ====================================================== -->
-<section class="slide content-slide" aria-label="The central question">
-  <div class="stars"></div>
-  <div class="orb orb-gold" style="width:40%;height:40%;bottom:-5%;left:-5%;opacity:0.7;"></div>
-  <div class="slide-content">
-    <div class="slide-header reveal">
-      <div class="slide-label">The Question</div>
-      <h2 class="slide-title">The <span class="gold">Structure</span> of the Dilemma</h2>
-      <div class="gold-rule reveal" style="transition-delay:0.15s;"></div>
-    </div>
+<main>
 
-    <div class="dilemma-center reveal" style="transition-delay:0.2s;">
-      <div class="dilemma-question">
-        "Does God command X because X is morally good, or is X morally good because God commands it?"
+  <!-- HS DEBATE -->
+  <section class="cat hs">
+    <div class="cat-header">
+      <div class="cat-icon">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 3L2 9l10 6 10-6-10-6z"/>
+          <path d="M2 15l10 6 10-6"/>
+          <path d="M2 12l10 6 10-6"/>
+        </svg>
       </div>
-      <div class="arrow-down"></div>
-      <div class="dilemma-arrows">
-        <div class="dilemma-horn">
-          <div class="horn-label">Horn 1</div>
-          <div class="horn-text">X is good <em style="color:var(--gold);">because</em> God commands it</div>
-          <div class="horn-problem">→ Morality is arbitrary — God could command cruelty and it would be "good."</div>
-        </div>
-        <div class="dilemma-horn">
-          <div class="horn-label">Horn 2</div>
-          <div class="horn-text">God commands X <em style="color:var(--gold);">because</em> it is good</div>
-          <div class="horn-problem">→ Morality is independent of God. God becomes redundant to ethics.</div>
-        </div>
+      <span class="cat-title">HS Debate</span>
+      <span class="cat-count">1 source</span>
+    </div>
+    <div class="links">
+      <a class="db-link" href="https://navigator.texquest.net/login.php?grade=high" target="_blank" rel="noopener">
+        <div class="dot"></div>
+        <span class="db-name">TexQuest Navigator</span>
+        <span class="arrow">↗</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- SJC DEBATE -->
+  <section class="cat sjc">
+    <div class="cat-header">
+      <div class="cat-icon">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <rect x="3" y="3" width="18" height="18" rx="2"/>
+          <path d="M3 9h18M9 21V9"/>
+        </svg>
       </div>
+      <span class="cat-title">SJC Debate</span>
+      <span class="cat-count">6 sources</span>
     </div>
-
-    <div class="accent-box reveal" style="transition-delay:0.45s;">
-      <strong>The Core Problem:</strong> Either God's commands are constrained by an external moral standard (limiting divine omnipotence), or morality is whatever God wills (making ethics arbitrary). Both seem theologically unacceptable.
+    <div class="links">
+      <a class="db-link" href="https://0-go-gale-com.libcat.sanjac.edu/ps/dispBasicSearch.do?userGroupName=txshracd2544&prodId=ITOF" target="_blank" rel="noopener">
+        <div class="dot"></div>
+        <span class="db-name">oneFile</span>
+        <span class="arrow">↗</span>
+      </a>
+      <a class="db-link" href="https://0-go-gale-com.libcat.sanjac.edu/ps/dispBasicSearch.do?userGroupName=txshracd2544&prodId=AONE" target="_blank" rel="noopener">
+        <div class="dot"></div>
+        <span class="db-name">Academic Search Complete</span>
+        <span class="arrow">↗</span>
+      </a>
+      <a class="db-link" href="https://0-link-gale-com.libcat.sanjac.edu/apps/OVIC?u=txshracd2544" target="_blank" rel="noopener">
+        <div class="dot"></div>
+        <span class="db-name">Opposing Viewpoints</span>
+        <span class="arrow">↗</span>
+      </a>
+      <a class="db-link" href="https://0-online-infobaselearning-com.libcat.sanjac.edu/Direct.aspx?aid=99140&pid=WE57" target="_blank" rel="noopener">
+        <div class="dot"></div>
+        <span class="db-name">Issues &amp; Controversies</span>
+        <span class="arrow">↗</span>
+      </a>
+      <a class="db-link" href="https://0-link-gale-com.libcat.sanjac.edu/apps/GIC?u=txshracd2544" target="_blank" rel="noopener">
+        <div class="dot"></div>
+        <span class="db-name">Global Issues in Context</span>
+        <span class="arrow">↗</span>
+      </a>
+      <a class="db-link" href="https://0-www-jstor-org.libcat.sanjac.edu/" target="_blank" rel="noopener">
+        <div class="dot"></div>
+        <span class="db-name">JSTOR</span>
+        <span class="arrow">↗</span>
+      </a>
     </div>
-  </div>
-  <div class="slide-num">03 / 13</div>
-</section>
+  </section>
 
-<!-- ======================================================
-     SLIDE 4: HORN 1 — DIVINE COMMAND / ARBITRARINESS
-     ====================================================== -->
-<section class="slide content-slide horn-1" aria-label="Horn 1">
-  <div class="stars"></div>
-  <div class="orb orb-crimson" style="width:45%;height:45%;bottom:0%;right:0%;opacity:0.6;"></div>
-  <div class="slide-content">
-    <div class="slide-header reveal">
-      <div class="slide-label">Horn 1 — The Arbitrariness Horn</div>
-      <h2 class="slide-title">"It is good <span class="gold">because</span> God commands it"</h2>
-      <div class="gold-rule reveal" style="transition-delay:0.1s;"></div>
-    </div>
-
-    <div class="two-col reveal" style="transition-delay:0.2s;">
-      <div>
-        <p style="font-family:var(--font-body);font-size:var(--body-size);color:var(--cream-dim);line-height:1.6;margin-bottom:clamp(0.4rem,1vh,0.8rem);">
-          If God's commands create moral facts from scratch, then there was no moral reason for God to issue those commands rather than their opposites.
-        </p>
-        <ul class="bullet-list">
-          <li><strong>The Arbitrariness Objection:</strong> If God commanded torture of innocents, would it be obligatory? Horn 1 says yes — and that's monstrous.</li>
-          <li><strong>The Changeable Morality Problem:</strong> If God changed His commands, morality would flip overnight. "Murder is wrong" becomes contingent, not necessary.</li>
-          <li><strong>The Empty Praise Problem:</strong> "God is good" collapses into "God obeys His own rules" — a tautology with zero moral content. You cannot praise a dictator for conforming to laws he invented and could revoke. Worship becomes fear of power, not genuine admiration of goodness.</li>
-          <li><strong>The Regress:</strong> If obedience to God is good, what makes obedience itself good? Either something prior to God's commands does — defeating Horn 1 — or "obedience is good because God commands obedience," which is circular.</li>
-        </ul>
+  <!-- HEALTH SCIENCE -->
+  <section class="cat hlt">
+    <div class="cat-header">
+      <div class="cat-icon">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 22s-8-5.686-8-11a8 8 0 0 1 16 0c0 5.314-8 11-8 11z"/>
+          <path d="M9 12h6M12 9v6"/>
+        </svg>
       </div>
-      <div>
-        <div class="col-card">
-          <div class="col-card-title">Strengths of This Horn</div>
-          <div class="col-card-body">Preserves divine sovereignty fully. God is the uncaused source of all being and value. Upholds the biblical picture of God as the supreme authority.</div>
-        </div>
-        <div class="col-card crimson" style="margin-top:clamp(0.5rem,1.5vh,1rem);">
-          <div class="col-card-title">The Deepest Problem</div>
-          <div class="col-card-body">William of Ockham accepted this horn fully. Most theists find it intolerable — not just because genocide could be holy on God's whim, but because it makes moral praise of God <em>literally impossible</em>. "God is good" would mean nothing more than "God is God."</div>
-        </div>
+      <span class="cat-title">Health Science</span>
+      <span class="cat-count">2 sources</span>
+    </div>
+    <div class="links">
+      <a class="db-link" href="https://0-search-ebscohost-com.libcat.sanjac.edu/login.aspx?profile=ehost&groupid=main&defaultdb=cul&authtype=ip,uid&custid=s8329457" target="_blank" rel="noopener">
+        <div class="dot"></div>
+        <span class="db-name">CINAHL</span>
+        <span class="arrow">↗</span>
+      </a>
+      <a class="db-link" href="https://0-www-proquest-com.libcat.sanjac.edu/intermediateredirectforezproxy" target="_blank" rel="noopener">
+        <div class="dot"></div>
+        <span class="db-name">HRPC (ProQuest)</span>
+        <span class="arrow">↗</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- SAT / ACT -->
+  <section class="cat sat">
+    <div class="cat-header">
+      <div class="cat-icon">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 20h9M16.5 3.5l4 4L7 21l-4 1 1-4L16.5 3.5z"/>
+        </svg>
       </div>
+      <span class="cat-title">SAT / ACT</span>
+      <span class="cat-count">1 source</span>
     </div>
-  </div>
-  <div class="slide-num">04 / 13</div>
-</section>
-
-<!-- ======================================================
-     SLIDE 5: HORN 2 — INDEPENDENT MORALITY
-     ====================================================== -->
-<section class="slide content-slide horn-2" aria-label="Horn 2">
-  <div class="stars"></div>
-  <div class="orb orb-gold" style="width:45%;height:45%;top:0%;right:0%;opacity:0.5;"></div>
-  <div class="slide-content">
-    <div class="slide-header reveal">
-      <div class="slide-label">Horn 2 — The Independence Horn</div>
-      <h2 class="slide-title">"God commands it <span class="gold">because</span> it is good"</h2>
-      <div class="gold-rule reveal" style="transition-delay:0.1s;"></div>
+    <div class="links">
+      <a class="db-link" href="https://0-portal-mometrixelibrary-com.libcat.sanjac.edu/?__acct=9152" target="_blank" rel="noopener">
+        <div class="dot"></div>
+        <span class="db-name">Mometrix eLibrary</span>
+        <span class="arrow">↗</span>
+      </a>
     </div>
+  </section>
 
-    <div class="two-col reveal" style="transition-delay:0.2s;">
-      <div>
-        <p style="font-family:var(--font-body);font-size:var(--body-size);color:var(--cream-dim);line-height:1.6;margin-bottom:clamp(0.4rem,1vh,0.8rem);">
-          If God recognizes and commands what is already good, then moral goodness is a standard <em>prior to</em> and <em>independent of</em> God's will.
-        </p>
-        <ul class="bullet-list">
-          <li><strong>Implication:</strong> God functions as a moral reporter, not a moral legislator.</li>
-          <li><strong>Implication:</strong> In principle, humans could access moral truths without reference to God at all.</li>
-          <li><strong>Implication:</strong> God is "subject" to morality, not its source — arguably undermining divine sovereignty.</li>
-        </ul>
-      </div>
-      <div>
-        <div class="col-card">
-          <div class="col-card-title">Strengths of This Horn</div>
-          <div class="col-card-body">Preserves moral realism. Explains why gratuitous cruelty is wrong even if God commanded it. Aligns with moral intuitions — allows secular ethics to be valid.</div>
-        </div>
-        <div class="col-card crimson" style="margin-top:clamp(0.5rem,1.5vh,1rem);">
-          <div class="col-card-title">Weaknesses</div>
-          <div class="col-card-body">Threatens divine aseity (God's absolute independence). If morality exists apart from God, why worship God for it? God becomes irrelevant to ethics.</div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="slide-num">05 / 13</div>
-</section>
+</main>
 
-<!-- ======================================================
-     SLIDE 6: DIVINE COMMAND THEORY — Full Treatment
-     ====================================================== -->
-<section class="slide content-slide dct-slide" aria-label="Divine Command Theory">
-  <div class="stars"></div>
-  <div class="orb orb-deep" style="width:55%;height:55%;top:-15%;left:-10%;"></div>
-  <div class="slide-content">
-    <div class="slide-header reveal">
-      <div class="slide-label">Theological Ethics</div>
-      <h2 class="slide-title">Divine Command Theory <span class="gold">( DCT )</span></h2>
-      <div class="gold-rule reveal" style="transition-delay:0.1s;"></div>
-    </div>
+<footer>research_portal.html &nbsp;·&nbsp; open in any browser</footer>
 
-    <div class="two-col reveal" style="transition-delay:0.2s;">
-      <div>
-        <div style="font-family:var(--font-heading);font-size:var(--small-size);color:var(--gold);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:0.5em;">Pure DCT (Horn 1 Straight)</div>
-        <ul class="bullet-list">
-          <li><strong>Core Claim:</strong> An act is morally obligatory if and only if God commands it. Morality is constituted entirely by divine will — no prior standard exists.</li>
-          <li><strong>Proponents:</strong> William of Ockham, John Duns Scotus. Biblical basis: Genesis 22 (Abraham/Isaac) — God commanding what seems horrific suggests morality follows command, not prior reason.</li>
-          <li><strong>Fully accepts the arbitrariness horn.</strong> God could have commanded cruelty. The position is internally consistent — and theologically catastrophic.</li>
-        </ul>
-      </div>
-      <div>
-        <div style="font-family:var(--font-heading);font-size:var(--small-size);color:var(--gold);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:0.5em;">Modified Voluntarism (Robert Adams)</div>
-        <ul class="bullet-list">
-          <li><strong>The Patch:</strong> God commands only what is consistent with His essentially <em>loving</em> nature. Arbitrariness is constrained — cruelty is off the table because love is essential to what God is.</li>
-          <li><strong>Still DCT?</strong> Barely. Commands still do the grounding work, but nature constrains them. Critics say this quietly abandons voluntarism — if nature constrains commands, nature is doing the real work, not the commands.</li>
-          <li><strong>The Regress:</strong> Why is a <em>loving</em> nature the moral standard rather than some other nature? Either love is independently good (Horn 2 smuggled back in) or it's arbitrary — arbitrariness relocated, not eliminated.</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="accent-box crimson reveal" style="transition-delay:0.5s;">
-      <strong>Key Distinction:</strong> Pure DCT grounds morality in God's <em>commands</em>. Modified Voluntarism tries to constrain commands via nature. Divine Nature Theory (DNT) drops commands entirely and grounds morality in God's <em>nature</em> alone. Each is a distinct position — they are often conflated, but the difference matters in rounds.
-    </div>
-  </div>
-  <div class="slide-num">06 / 13</div>
-</section>
-
-<!-- ======================================================
-     SLIDE 7: THE AQUINAS ESCAPE — Part 1
-     ====================================================== -->
-<section class="slide content-slide aquinas-slide" aria-label="The Aquinas Escape">
-  <div class="stars"></div>
-  <div class="orb orb-gold" style="width:50%;height:50%;top:30%;right:-15%;opacity:0.5;"></div>
-  <div class="slide-content">
-    <div class="slide-header reveal">
-      <div class="slide-label">The Third Option</div>
-      <h2 class="slide-title">The <span class="gold">Aquinas</span> Escape</h2>
-      <div class="gold-rule reveal" style="transition-delay:0.1s;"></div>
-    </div>
-
-    <div class="big-quote reveal" style="transition-delay:0.2s;">
-      "Goodness does not depend on God's will but on His nature. God commands what is good because it is an expression of who He is — not because He recognizes an external standard."
-      <span class="attribution">— Paraphrase of Thomas Aquinas, Summa Theologica (~1265)</span>
-    </div>
-
-    <ul class="bullet-list reveal" style="transition-delay:0.35s;margin-top:clamp(0.4rem,1.2vh,1rem);">
-      <li><strong>The Move:</strong> Reject the assumption that the only options are (A) external moral standard or (B) arbitrary will. Locate morality in God's <em>nature itself</em>.</li>
-      <li><strong>Key Distinction:</strong> God does not consult an external standard, nor does He arbitrarily decree. He <em>is</em> the standard. His commands flow necessarily from His essential character.</li>
-      <li><strong>How it escapes Horn 1:</strong> Cruelty could never be commanded because God is essentially good — it is metaphysically impossible, not merely unlikely.</li>
-    </ul>
-
-    <div class="accent-box reveal" style="transition-delay:0.5s;">
-      <strong>Critical question for debate:</strong> Does this actually escape the dilemma, or does it just relocate it? Critics argue the dilemma re-emerges: is God's nature good because of some further standard, or is "goodness" just defined as whatever God's nature is?
-    </div>
-  </div>
-  <div class="slide-num">07 / 13</div>
-</section>
-
-<!-- ======================================================
-     SLIDE 8: THE AQUINAS ESCAPE — Objections
-     ====================================================== -->
-<section class="slide content-slide aquinas-slide" aria-label="Aquinas Escape Objections">
-  <div class="stars"></div>
-  <div class="orb orb-deep" style="width:45%;height:55%;bottom:-10%;left:-5%;"></div>
-  <div class="slide-content">
-    <div class="slide-header reveal">
-      <div class="slide-label">The Third Option — Scrutiny</div>
-      <h2 class="slide-title">Evaluating the <span class="gold">Aquinas Escape</span></h2>
-      <div class="gold-rule reveal" style="transition-delay:0.1s;"></div>
-    </div>
-
-    <div class="two-col reveal" style="transition-delay:0.2s;">
-      <div>
-        <div class="col-card">
-          <div class="col-card-title">In Its Favor</div>
-          <div class="col-card-body">
-            <ul style="list-style:none;display:flex;flex-direction:column;gap:0.4em;">
-              <li style="color:var(--cream-dim);font-family:var(--font-body);font-size:var(--body-size);">✦ Avoids both horns simultaneously</li>
-              <li style="color:var(--cream-dim);font-family:var(--font-body);font-size:var(--body-size);">✦ Preserves divine sovereignty and moral necessity</li>
-              <li style="color:var(--cream-dim);font-family:var(--font-body);font-size:var(--body-size);">✦ "God is good" becomes substantive, not tautological</li>
-              <li style="color:var(--cream-dim);font-family:var(--font-body);font-size:var(--body-size);">✦ Grounds the necessary truths of ethics in a necessary Being</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      <div>
-        <div class="col-card crimson">
-          <div class="col-card-title">Against It</div>
-          <div class="col-card-body">
-            <ul style="list-style:none;display:flex;flex-direction:column;gap:0.4em;">
-              <li style="color:var(--cream-dim);font-family:var(--font-body);font-size:var(--body-size);">✦ Dilemma re-emerges at the level of God's nature</li>
-              <li style="color:var(--cream-dim);font-family:var(--font-body);font-size:var(--body-size);">✦ "Good = God's nature" risks circularity or redefinition</li>
-              <li style="color:var(--cream-dim);font-family:var(--font-body);font-size:var(--body-size);">✦ Cannot explain why God's nature is the moral terminus, not just that it is</li>
-              <li style="color:var(--cream-dim);font-family:var(--font-body);font-size:var(--body-size);">✦ Demands a full metaphysical account of how divine nature grounds moral necessity</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="accent-box reveal" style="transition-delay:0.4s;margin-top:clamp(0.5rem,1.5vh,1.2rem);">
-      <strong>Debate Note:</strong> The Aquinas escape is most powerful when paired with Divine Nature Theory. By itself, it needs a metaphysical framework to avoid circularity. The question becomes: what grounds the nature itself?
-    </div>
-  </div>
-  <div class="slide-num">08 / 13</div>
-</section>
-
-<!-- ======================================================
-     SLIDE 9: DIVINE NATURE THEORY
-     ====================================================== -->
-<section class="slide content-slide dnt-slide" aria-label="Divine Nature Theory">
-  <div class="stars"></div>
-  <div class="orb orb-gold" style="width:40%;height:40%;top:-5%;right:5%;opacity:0.6;"></div>
-  <div class="slide-content">
-    <div class="slide-header reveal">
-      <div class="slide-label">Alternative Framework</div>
-      <h2 class="slide-title">Divine Nature Theory <span class="gold">( DNT )</span></h2>
-      <div class="gold-rule reveal" style="transition-delay:0.1s;"></div>
-    </div>
-
-    <ul class="bullet-list reveal" style="transition-delay:0.2s;">
-      <li><strong>Core Claim:</strong> Moral properties are grounded in God's nature, not His commands. God is the exemplar of all moral goodness — goodness just <em>is</em> conformity to the divine nature.</li>
-      <li><strong>Key Proponents:</strong> Thomas Aquinas, C.S. Lewis, William Lane Craig (contemporary), Brian Leftow.</li>
-      <li><strong>Moral Ontology:</strong> Moral facts are necessary truths grounded in the metaphysically necessary being of God. "Torturing innocents is wrong" is as necessary as "2+2=4."</li>
-      <li><strong>God's Commands:</strong> Commands are expressions of and consistent with God's nature, not arbitrary decrees. This fully detaches DNT from the arbitrariness horn.</li>
-      <li><strong>Craig's Formulation:</strong> Without God as the foundation, there is no adequate grounding for objective moral facts. DNT provides the ontological anchor that naturalistic ethics cannot.</li>
-    </ul>
-
-    <div class="tag-row reveal" style="transition-delay:0.6s;">
-      <span class="tag active">Moral Realism</span>
-      <span class="tag active">Necessary Being</span>
-      <span class="tag">Exemplar Causation</span>
-      <span class="tag">Craig</span>
-      <span class="tag">Aquinas</span>
-    </div>
-  </div>
-  <div class="slide-num">09 / 13</div>
-</section>
-
-<!-- ======================================================
-     SLIDE 10: DNT — Objections
-     ====================================================== -->
-<section class="slide content-slide dnt-slide" aria-label="DNT Objections">
-  <div class="stars"></div>
-  <div class="orb orb-deep" style="width:50%;height:50%;bottom:-10%;right:-10%;"></div>
-  <div class="slide-content">
-    <div class="slide-header reveal">
-      <div class="slide-label">Divine Nature Theory — Scrutiny</div>
-      <h2 class="slide-title">Objections to <span class="gold">DNT</span></h2>
-      <div class="gold-rule reveal" style="transition-delay:0.1s;"></div>
-    </div>
-
-    <ul class="bullet-list reveal" style="transition-delay:0.2s;">
-      <li><strong>The Re-Emergence Objection:</strong> Does the dilemma now apply to God's nature? Is God's nature good by some further standard, or is "good" just defined as "like God"? Either way we seem stuck.</li>
-      <li><strong>The Conceptual Analysis Problem:</strong> How do we access or verify the content of God's nature? DNT may require a complete theology before it can deliver ethics — a substantial starting burden in debate.</li>
-      <li><strong>The Euthyphro Regress:</strong> Whatever grounds God's nature faces the same dilemma again. One can always ask: is God's nature necessarily good by some standard, or is "good" simply defined by it?</li>
-      <li><strong>The Grounding Challenge:</strong> Secular moral realism argues that moral facts could in principle be necessary without a personal ground — putting the burden on DNT to explain why personhood is essential to moral ontology.</li>
-    </ul>
-
-    <div class="accent-box reveal" style="transition-delay:0.5s;">
-      <strong>Best Theist Reply:</strong> God's nature is the stopping point for grounding — just as the laws of logic are not grounded in something further. All grounding chains terminate somewhere; theists argue God's necessary nature is the most coherent terminus.
-    </div>
-  </div>
-  <div class="slide-num">10 / 13</div>
-</section>
-
-<!-- ======================================================
-     SLIDE 11: DCT vs DNT Comparison
-     ====================================================== -->
-<section class="slide content-slide" aria-label="DCT vs DNT Comparison">
-  <div class="stars"></div>
-  <div class="orb orb-gold" style="width:30%;height:30%;top:10%;left:35%;opacity:0.4;"></div>
-  <div class="slide-content">
-    <div class="slide-header reveal">
-      <div class="slide-label">Head to Head</div>
-      <h2 class="slide-title"><span class="gold">DCT</span> vs. <span class="gold">DNT</span></h2>
-      <div class="gold-rule reveal" style="transition-delay:0.1s;"></div>
-    </div>
-
-    <div class="two-col reveal" style="transition-delay:0.2s;">
-      <div class="col-card">
-        <div class="col-card-title">Divine Command Theory</div>
-        <div class="col-card-body">
-          <ul style="list-style:none;display:flex;flex-direction:column;gap:0.4em;font-family:var(--font-body);font-size:var(--body-size);">
-            <li style="color:var(--cream-dim);">✦ Morality = what God commands</li>
-            <li style="color:var(--cream-dim);">✦ Grounds morality in God's will</li>
-            <li style="color:var(--cream-dim);">✦ Strong: divine sovereignty preserved</li>
-            <li style="color:var(--crimson-bright);">✗ Weak: open to arbitrariness objection</li>
-            <li style="color:var(--crimson-bright);">✗ Makes "God is good" a tautology</li>
-            <li style="color:var(--crimson-bright);">✗ Morality could change if God's will did</li>
-          </ul>
-        </div>
-      </div>
-      <div class="col-card">
-        <div class="col-card-title">Divine Nature Theory</div>
-        <div class="col-card-body">
-          <ul style="list-style:none;display:flex;flex-direction:column;gap:0.4em;font-family:var(--font-body);font-size:var(--body-size);">
-            <li style="color:var(--cream-dim);">✦ Morality = conformity to God's nature</li>
-            <li style="color:var(--cream-dim);">✦ Grounds morality in God's necessary being</li>
-            <li style="color:var(--cream-dim);">✦ Strong: escapes arbitrariness, preserves praise</li>
-            <li style="color:var(--gold);">✦ Morality is as necessary as God's own existence</li>
-            <li style="color:var(--crimson-bright);">✗ Dilemma re-emerges for God's nature</li>
-            <li style="color:var(--crimson-bright);">✗ Requires a metaphysical account of how nature grounds necessity</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <div class="accent-box reveal" style="transition-delay:0.4s;margin-top:clamp(0.4rem,1.2vh,1rem);">
-      <strong>Consensus among contemporary theist philosophers:</strong> DNT (combined with Aquinas's third option) is the dominant response to the dilemma. DCT survives primarily in voluntarist traditions (Scotus, Ockham, some Reformed theology).
-    </div>
-  </div>
-  <div class="slide-num">11 / 13</div>
-</section>
-
-<!-- ======================================================
-     SLIDE 12: DEBATE STRATEGY
-     ====================================================== -->
-<section class="slide content-slide" aria-label="Debate Strategy">
-  <div class="stars"></div>
-  <div class="orb orb-deep" style="width:45%;height:45%;top:20%;right:-10%;"></div>
-  <div class="slide-content">
-    <div class="slide-header reveal">
-      <div class="slide-label">Preparation · Strategy</div>
-      <h2 class="slide-title">Key <span class="gold">Arguments</span> to Know</h2>
-      <div class="gold-rule reveal" style="transition-delay:0.1s;"></div>
-    </div>
-
-    <div class="two-col reveal" style="transition-delay:0.2s;">
-      <div>
-        <div style="font-family:var(--font-heading);font-size:var(--small-size);color:var(--gold);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:0.5em;">Against Divine Grounding</div>
-        <ul class="bullet-list">
-          <li>Press the arbitrariness horn: "Could God command genocide and make it obligatory?" Forces the theist to DCT or DNT.</li>
-          <li>Press the re-emergence: "Is God's nature good by some further standard?" Challenges DNT's claim to fully resolve the dilemma.</li>
-          <li>Deploy the grounding challenge: argue moral facts could be necessary without a personal ground, and demand DNT explain why personhood is required.</li>
-        </ul>
-      </div>
-      <div>
-        <div style="font-family:var(--font-heading);font-size:var(--small-size);color:var(--gold);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:0.5em;">For Divine Grounding</div>
-        <ul class="bullet-list">
-          <li>Aquinas escape: reject the dichotomy. Morality is in God's nature, not His commands, not an external standard.</li>
-          <li>Necessary being objection: all grounding stops somewhere; God's nature is the most coherent terminus.</li>
-          <li>Turn the secular horn: without God, moral realism has its own grounding problem. Why think non-natural moral facts exist?</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-  <div class="slide-num">12 / 13</div>
-</section>
-
-<!-- ======================================================
-     SLIDE 13: CLOSING
-     ====================================================== -->
-<section class="slide closing-slide" aria-label="Closing">
-  <div class="stars"></div>
-  <div class="halo-ring" style="width:min(55vh,450px);height:min(55vh,450px);top:50%;left:50%;transform:translate(-50%,-50%);"></div>
-  <div class="halo-ring" style="width:min(75vh,650px);height:min(75vh,650px);top:50%;left:50%;transform:translate(-50%,-50%);border-color:rgba(201,162,39,0.05);"></div>
-  <div class="orb orb-gold" style="width:35%;height:35%;top:30%;left:32%;"></div>
-  <div class="orb orb-deep" style="width:50%;height:50%;top:20%;left:25%;"></div>
-
-  <div class="closing-inner">
-    <div class="eyebrow reveal">The Question Remains</div>
-    <h2 class="closing-title reveal" style="transition-delay:0.1s;">Ante Iudicem Aeterna</h2>
-    <div class="gold-rule center wide reveal" style="transition-delay:0.2s;"></div>
-    <p class="closing-sub reveal" style="transition-delay:0.3s;">
-      "Before the eternal judge" — the Euthyphro Dilemma has persisted for 2,400 years because it strikes at something fundamental: the relationship between divinity and moral reality. Neither horn is comfortable. The debate is the point.
-    </p>
-    <div class="tag-row reveal" style="transition-delay:0.45s;justify-content:center;margin-top:clamp(0.8rem,2vh,1.5rem);">
-      <span class="tag active">Euthyphro</span>
-      <span class="tag active">DCT</span>
-      <span class="tag active">DNT</span>
-      <span class="tag active">Aquinas Escape</span>
-      <span class="tag active">Moral Realism</span>
-    </div>
-  </div>
-  <div class="slide-num">13 / 13</div>
-</section>
-
-<script>
-  /* ======================================================
-     SLIDE PRESENTATION CONTROLLER
-     Navigate: Arrow keys, Space, PageUp/Down, scroll, swipe
-     ====================================================== */
-  class SlidePresentation {
-    constructor() {
-      this.slides = document.querySelectorAll('.slide');
-      this.totalSlides = this.slides.length;
-      this.currentSlide = 0;
-      this.isScrolling = false;
-      this.progressBar = document.getElementById('progressBar');
-      this.navDotsContainer = document.getElementById('navDots');
-
-      this.setupIntersectionObserver();
-      this.setupKeyboardNav();
-      this.setupTouchNav();
-      this.setupScrollNav();
-      this.setupNavDots();
-      this.updateProgress(0);
-    }
-
-    setupIntersectionObserver() {
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            const index = Array.from(this.slides).indexOf(entry.target);
-            this.currentSlide = index;
-            this.updateProgress(index);
-            this.updateNavDots(index);
-          }
-        });
-      }, { threshold: 0.5 });
-      this.slides.forEach(slide => observer.observe(slide));
-    }
-
-    goTo(index) {
-      if (index < 0 || index >= this.totalSlides) return;
-      this.slides[index].scrollIntoView({ behavior: 'smooth' });
-    }
-
-    setupKeyboardNav() {
-      document.addEventListener('keydown', e => {
-        if (['ArrowDown','ArrowRight',' ','PageDown'].includes(e.key)) {
-          e.preventDefault(); this.goTo(this.currentSlide + 1);
-        }
-        if (['ArrowUp','ArrowLeft','PageUp'].includes(e.key)) {
-          e.preventDefault(); this.goTo(this.currentSlide - 1);
-        }
-        if (e.key === 'Home') { e.preventDefault(); this.goTo(0); }
-        if (e.key === 'End') { e.preventDefault(); this.goTo(this.totalSlides - 1); }
-      });
-    }
-
-    setupScrollNav() {
-      let lastScrollTime = 0;
-      window.addEventListener('wheel', e => {
-        const now = Date.now();
-        if (now - lastScrollTime < 800) return;
-        lastScrollTime = now;
-        if (e.deltaY > 0) this.goTo(this.currentSlide + 1);
-        else this.goTo(this.currentSlide - 1);
-      }, { passive: true });
-    }
-
-    setupTouchNav() {
-      let startY = 0, startX = 0;
-      document.addEventListener('touchstart', e => {
-        startY = e.touches[0].clientY;
-        startX = e.touches[0].clientX;
-      }, { passive: true });
-      document.addEventListener('touchend', e => {
-        const dy = startY - e.changedTouches[0].clientY;
-        const dx = startX - e.changedTouches[0].clientX;
-        if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 40) {
-          if (dy > 0) this.goTo(this.currentSlide + 1);
-          else this.goTo(this.currentSlide - 1);
-        }
-      }, { passive: true });
-    }
-
-    updateProgress(index) {
-      const pct = this.totalSlides > 1 ? index / (this.totalSlides - 1) : 0;
-      this.progressBar.style.transform = `scaleX(${pct})`;
-    }
-
-    setupNavDots() {
-      this.navDotsContainer.innerHTML = '';
-      this.slides.forEach((_, i) => {
-        const dot = document.createElement('button');
-        dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
-        dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
-        dot.addEventListener('click', () => this.goTo(i));
-        this.navDotsContainer.appendChild(dot);
-      });
-    }
-
-    updateNavDots(index) {
-      document.querySelectorAll('.nav-dot').forEach((dot, i) => {
-        dot.classList.toggle('active', i === index);
-      });
-    }
-  }
-
-  new SlidePresentation();
-</script>
 </body>
 </html>
